@@ -17,20 +17,22 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./counter # ← 여기 수정
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
-          cache-dependency-path: package-lock.json
+          cache-dependency-path: counter/package-lock.json
       - run: npm ci
       - run: npm run build
       - uses: actions/configure-pages@v4
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
-
+          path: ./counter/dist # ← 빌드 결과물 경로도 counter 기준으로
   deploy:
     needs: build
     runs-on: ubuntu-latest
